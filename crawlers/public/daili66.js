@@ -22,14 +22,14 @@ class Daili66Crawler extends BaseCrawler{
         let _trs = trs.slice(1,trs.length)
         _trs.each((i, elem)=>{
             host = $(elem).children('td').eq(0).text();
-            //console.log(host)
             port = $(elem).children('td').eq(1).text();
-            //console.log(`host:${host},port:${port}`);
-            _proxies.push([host,port]);
+            _proxies.push(`${host}:${port}`);
         });
         return _proxies
     }
 }
 
 var crawler = new Daili66Crawler
-crawler.crawl().then(x=>console.log(s))
+let s = crawler.crawl().then(x=>console.log(x))
+
+module.exports = Daili66Crawler
