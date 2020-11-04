@@ -29,7 +29,7 @@ class Daili66Crawler extends BaseCrawler{
     }
 }
 
-var crawler = new Daili66Crawler
-let s = crawler.crawl().then(x=>console.log(x))
+// var crawler = new Daili66Crawler
+// let s = crawler.crawl().then(x=>console.log(x))
 
 module.exports = Daili66Crawler

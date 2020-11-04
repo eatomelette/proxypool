@@ -14,9 +14,9 @@ class Tester extends BaseCrawler{
      * 
      * @param {object} proxies 代理列表[ip:port,...]
      */
-    constructor(proxies){
+    constructor(){
         super()
-        this.proxies = proxies;
+        //this.proxies = proxies;
         this.option = OPTION
     };
 
@@ -30,16 +30,19 @@ class Tester extends BaseCrawler{
                     resolve({host:proxy, delay:req.delay});
                 }else{resolve(`Error:origin Ip != host`)}
             })
-            .catch(err=>console.log(err), resolve(err.toString()))
+            .catch((error)=>{
+                console.log(error);
+                resolve(error.toString())});
         });
     };
 /**
- * 返回值 {host:proxy, delay:delay}
+ * 返回值 [{host:proxy, delay:delay},...]
+ * @param {object} proxies 代理列表[ip:port,...]
  */
-    test(){
-        const _add = (a1, a2)=>a1.concat(a2);
+    async test(proxies){
+        const _add = (a, b)=>a.concat(b);
         const f = (a)=>typeof(a)=='string'? false: true;
-        let _promises = this.proxies.map(p=>testOne(p));
+        let _promises = proxies.map(p=>this.testOne(p));
         let _res = await Promise.all(_promises)
         return _res.fillter(f).reduce(_add,[])
     };

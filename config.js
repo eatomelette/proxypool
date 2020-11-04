@@ -6,7 +6,7 @@ const proxy = {
 };
 
 const db = {
-    dbpath: __dirname,
+    dbpath: path.join(__dirname,'proxies.db')
 };
 
 const test = {

@@ -76,7 +76,7 @@ class BaseCrawler{
       .catch(async(err)=>{
         if(retries>1){
           await pause(delay);
-          this.retry_fetch(url, retries-1, delay);
+          this.retryFetch(url, retries-1, delay);
         }else{
           reject(err);
         };
@@ -93,15 +93,15 @@ class BaseCrawler{
      * @param {string} url 单个url
      */
     const _proxiesGetter = async(url)=>{
-      let html = await this.retry_fetch(url);
+      let html = await this.retryFetch(url);
       return this.parse(html);
     };
     /**
      * 
-     * @param {object} res_1 结果列表[host:port,...]
-     * @param {object} res_2 结果列表[host:port,...]
+     * @param {object} a 结果列表[host:port,...]
+     * @param {object} b 结果列表[host:port,...]
      */
-    const addRes = (res_1,res_2) => res_1.concat(res_2);
+    const addRes = (a,b) => a.concat(b);
     
     const proxiesGetter = this.urls.map(url=>_proxiesGetter(url));
     let resList = await Promise.all(proxiesGetter);

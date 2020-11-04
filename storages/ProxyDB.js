@@ -1,17 +1,18 @@
 const Database = require('better-sqlite3')
-const dbconfig = require('../config').dbconfig
+const dbconfig = require('../config').db
 
 class ProxyDB{
     constructor(){
-        this.db = new Database(dbconfig.path);
-        const stmt = this.db.prepare(`CREATE TABLE IF NOT EXITS proxy(
+        console.log(dbconfig.dbpath)
+        this.db = new Database(dbconfig.dbpath, { verbose: console.log });
+        const stmt = this.db.prepare(`CREATE TABLE IF NOT EXISTS proxy(
             host TEXT PRIMARY KEY NOT NULL UNIQUE,
             delay INTEGER,
             t TIMESTAMP DEFAULT CURRENT_TIMESTAMP)
         `);
         stmt.run();
-        this.insertExpense = this.db.prepare(`INSERT OR REPLACE INTO TABLE proxy (host, delay) VALUES (?, ?)`);
-        this.deleteExpense = this.db.prepare(`DELETE FROM TABLE proxy WHERE host = ?`)
+        this.insertExpense = this.db.prepare(`INSERT OR REPLACE INTO proxy (host, delay) VALUES (@host, @delay)`);
+        this.deleteExpense = this.db.prepare(`DELETE FROM proxy WHERE host = ?`)
     };
 /**
  * 
@@ -24,9 +25,9 @@ class ProxyDB{
 /**
  * @param {list} hostList 代理地址列表 [{host,delay},...]
  */
-    insertMany = this.db.transaction((hostList)=>{
+    insertMany = (hostList)=>{
         for(const host of hostList) this.insertExpense.run(host);
-    });
+    };
 /**
  * 
  * @param {string} host 代理地址-ip:端口
@@ -38,9 +39,9 @@ class ProxyDB{
  * 
  * @param {List} hostList 代理地址列表 [host,...]
  */
-    deleteMany = this.transaction((hostList)=>{
+    deleteMany = (hostList)=>{
         for(const host of hostList) this.deleteExpense.run(host)
-    });
+    };
 /**
  * 
  * @param {number} some 随机选取some个代理地址
@@ -60,3 +61,5 @@ class ProxyDB{
 }
 
 module.exports = ProxyDB;
+// console.log(dbconfig.dbpath)
+// new ProxyDB
